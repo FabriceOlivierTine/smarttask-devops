@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'RÃ©cupÃ©ration du code depuis GitHub...'
+                echo 'RÃƒÂ©cupÃƒÂ©ration du code depuis GitHub...'
                 checkout scm
             }
         }
@@ -36,7 +36,7 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 echo 'Connexion au registre Docker Hub...'
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'printf "%s" "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
             }
         }
         stage('Push Images') {
@@ -52,10 +52,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline exÃ©cutÃ© avec succÃ¨s : images construites et publiÃ©es.'
+            echo 'Pipeline exÃƒÂ©cutÃƒÂ© avec succÃƒÂ¨s : images construites et publiÃƒÂ©es.'
         }
         failure {
-            echo 'Le pipeline a Ã©chouÃ©. Consultez les journaux ci-dessus pour identifier l\'erreur.'
+            echo 'Le pipeline a ÃƒÂ©chouÃƒÂ©. Consultez les journaux ci-dessus pour identifier l\'erreur.'
         }
         always {
             sh 'docker logout || true'
