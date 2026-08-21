@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: smarttask-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - smarttask-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: smarttask-backend
+    restart: always
+    environment:
+      DB_HOST: database
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: 5432
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    networks:
+      - smarttask-network
+
+  frontend:
+    build: ./frontend
+    container_name: smarttask-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "8081:80"
+    networks:
+      - smarttask-network
+
+networks:
+  smarttask-network:
+    driver: bridge
+
+volumes:
+  db_data:
