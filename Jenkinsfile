@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        DOCKERHUB_USER = 'TON_USER_DOCKERHUB'
+        DOCKERHUB_USER = 'FabriceOlivierTine'
         IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
 
