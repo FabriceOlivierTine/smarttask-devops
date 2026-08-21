@@ -1,8 +1,8 @@
-pipeline {
+﻿pipeline {
     agent {
         docker {
             image 'docker:24-cli'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
+            args '-v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp'
         }
     }
 
@@ -19,7 +19,6 @@ pipeline {
                 checkout scm
             }
         }
-
         stage('Build Backend Image') {
             steps {
                 echo 'Construction de l\'image backend...'
@@ -27,7 +26,6 @@ pipeline {
                 sh 'docker tag $DOCKERHUB_USER/smarttask-backend:$IMAGE_TAG $DOCKERHUB_USER/smarttask-backend:latest'
             }
         }
-
         stage('Build Frontend Image') {
             steps {
                 echo 'Construction de l\'image frontend...'
@@ -35,14 +33,12 @@ pipeline {
                 sh 'docker tag $DOCKERHUB_USER/smarttask-frontend:$IMAGE_TAG $DOCKERHUB_USER/smarttask-frontend:latest'
             }
         }
-
         stage('Login to Docker Hub') {
             steps {
                 echo 'Connexion au registre Docker Hub...'
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
-
         stage('Push Images') {
             steps {
                 echo 'Publication des images sur Docker Hub...'
