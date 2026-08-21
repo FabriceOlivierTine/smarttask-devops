@@ -1,4 +1,4 @@
-pipeline {
+﻿pipeline {
     agent {
         docker {
             image 'docker:24-cli'
@@ -8,14 +8,14 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
-        DOCKERHUB_USER = 'FabriceOlivierTine'
+        DOCKERHUB_USER = 'fabriceoliviertine'
         IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo 'Récupération du code depuis GitHub...'
+                echo 'RÃ©cupÃ©ration du code depuis GitHub...'
                 checkout scm
             }
         }
@@ -52,10 +52,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline exécuté avec succès : images construites et publiées.'
+            echo 'Pipeline exÃ©cutÃ© avec succÃ¨s : images construites et publiÃ©es.'
         }
         failure {
-            echo 'Le pipeline a échoué. Consultez les journaux ci-dessus pour identifier l\'erreur.'
+            echo 'Le pipeline a Ã©chouÃ©. Consultez les journaux ci-dessus pour identifier l\'erreur.'
         }
         always {
             sh 'docker logout || true'
